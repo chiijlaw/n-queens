@@ -84,19 +84,18 @@
       if (sumRow > 1) {
         return true;
       }
-      return false; // fixme
+      return false; 
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      var output = false;
       for (var i = 0; i < this.attributes.n; i++) {
         var sumRow = _.reduce(this.attributes[i], function(memo, num){ return memo + num; }, 0);
         if (sumRow > 1) {
           return true;
         }
       }
-      return output; // fixme
+      return false; 
     },
 
 
@@ -106,12 +105,34 @@
     //
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
-      return false; // fixme
+      var col = [];
+      for (var j = 0; j < this.attributes.n; j++) {
+        col.push(this.attributes[j][colIndex]);
+        
+      }
+      var sumCol = _.reduce(col, function(memo, num){ return memo + num; }, 0);
+      if (sumCol > 1) {
+        return true;
+      }
+
+    return false; 
     },
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      return false; // fixme
+      for (var i = 0; i < this.attributes.n; i++) {
+        var col = [];
+        for (var j = 0; j < this.attributes.n; j++) {
+          col.push(this.attributes[j][i]);
+          
+        }
+        var sumCol = _.reduce(col, function(memo, num){ return memo + num; }, 0);
+        if (sumCol > 1) {
+          return true;
+        }
+      };
+
+      return false; 
     },
 
 
