@@ -79,12 +79,24 @@
     //
     // test if a specific row on this board contains a conflict
     hasRowConflictAt: function(rowIndex) {
+
+      var sumRow = _.reduce(this.attributes[rowIndex], function(memo, num){ return memo + num; }, 0);
+      if (sumRow > 1) {
+        return true;
+      }
       return false; // fixme
     },
 
     // test if any rows on this board contain conflicts
     hasAnyRowConflicts: function() {
-      return false; // fixme
+      var output = false;
+      for (var i = 0; i < this.attributes.n; i++) {
+        var sumRow = _.reduce(this.attributes[i], function(memo, num){ return memo + num; }, 0);
+        if (sumRow > 1) {
+          return true;
+        }
+      }
+      return output; // fixme
     },
 
 
