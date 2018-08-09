@@ -61,7 +61,42 @@ window.countNRooksSolutions = function (n) {
 
 // return a matrix (an array of arrays) representing a single nxn chessboard, with n queens placed such that none of them can attack each other
 window.findNQueensSolution = function (n) {
-  var solution = undefined; //fixme
+  const solution = 0;
+  const rowHash = {};
+  const colHash = {};
+  let queensPlaced = 0;
+  const board = new Board({
+    n: n
+  });
+
+  const recur = function (rowIndex, columnIndex) {
+    if (queensPlaced === n) {
+      solution += 1;
+      return;
+    }
+    for (let rowIndex = rowIndex; rowIndex < n; rowIndex++) {
+      for (let columnIndex = columnIndex; columnIndex < n; columnIndex++) {
+        if (!rowHash[rowIndex] && !colHash[columnIndex]) {
+          board.togglePiece(rowIndex, columnIndex);
+          const majorDiagIndex = board._getFirstRowColumnIndexForMajorDiagonalOn(rowIndex, columnIndex);
+          const minorDiagIndex = board._getFirstRowColumnIndexForMinorDiagonalOn(rowIndex, columnIndex);
+          if (board.hasMajorDiagonalConflictAt(majorDiagIndex) || board.hasMinorDiagonalConflictAt(minorDiagIndex)) {
+            board.togglePiece(rowIndex, columnIndex);
+          } else {
+            rowHash[rowIndex] = true;
+            colHash[columnIndex] = true;
+            queensPlaced += 1;
+            recur(rowIndex, columnIndex);
+            board.togglePiece(rowIndex, columnIndex);
+            queensPlaced -= 1;
+          }
+        }
+      }
+    }
+    return;
+  };
+
+  recur(0, 0);
 
   console.log('Single solution for ' + n + ' queens:', JSON.stringify(solution));
   return solution;
