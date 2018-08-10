@@ -106,8 +106,8 @@
     // test if a specific column on this board contains a conflict
     hasColConflictAt: function(colIndex) {
       var col = [];
-      for (var j = 0; j < this.attributes.n; j++) {
-        col.push(this.attributes[j][colIndex]);
+      for (var jrow = 0; jrow < this.attributes.n; jrow++) {
+        col.push(this.attributes[jrow][colIndex]);
         
       }
       var sumCol = _.reduce(col, function(memo, num){ return memo + num; }, 0);
@@ -120,18 +120,17 @@
 
     // test if any columns on this board contain conflicts
     hasAnyColConflicts: function() {
-      for (var i = 0; i < this.attributes.n; i++) {
+      for (var icol = 0; icol < this.attributes.n; icol++) {
         var col = [];
-        for (var j = 0; j < this.attributes.n; j++) {
-          col.push(this.attributes[j][i]);
+        for (var jrow = 0; jrow < this.attributes.n; jrow++) {
+          col.push(this.attributes[jrow][icol]);
           
         }
         var sumCol = _.reduce(col, function(memo, num){ return memo + num; }, 0);
         if (sumCol > 1) {
           return true;
         }
-      };
-
+      }
       return false; 
     },
 
@@ -142,11 +141,47 @@
     //
     // test if a specific major diagonal on this board contains a conflict
     hasMajorDiagonalConflictAt: function(majorDiagonalColumnIndexAtFirstRow) {
+      var major = [];
+      var start = majorDiagonalColumnIndexAtFirstRow;
+      var sumMajor = _.reduce(major, function(memo, num) {return memo + num;}, 0);
+      if (sumMajor > 1) {
+        return true;
+      }
       return false; // fixme
     },
 
     // test if any major diagonals on this board contain conflicts
     hasAnyMajorDiagonalConflicts: function() {
+      var majors = [];
+      var end = this.attributes.n;
+      var matrix = this.attributes
+      var diagRightToMajors = function(row, column) {
+        if (row < end && column < end) {
+          majors.push(matrix[row][column]);
+          diagRightToMajors(row + 1, column + 1);
+        }
+      };
+
+      var diagLeftToMajors = function(row, column) {
+        if (row > end && column > end) {
+          majors.push(matrix[row][column]);
+          diagLeftToMajors(row - 1, column - 1);
+        }
+      };
+
+      for (var col = 0; col < this.attributes.n; col++) {
+        for (var row = 0; row < this.attributes.n; row++) {
+          if (this.attributes[row][col] === 1) {
+            majors.push(1);
+            diagRightToMajors(row + 1, col + 1);
+            diagLeftToMajors(row - 1, col - 1);
+          }
+        }
+      }
+      var sumMajor = _.reduce(majors, function(memo, num) {return memo + num;}, 0);
+      if (sumMajor > 1) {
+        return true;
+      }
       return false; // fixme
     },
 
